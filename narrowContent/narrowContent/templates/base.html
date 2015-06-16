@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+     {% load staticfiles %}
+     <title>{% block title %}Narrowcontent{% endblock %}</title>
+</head>
+
+<body>
+    <div id="content">
+        {% block content %}{% endblock %}
+    </div>
+<hr>    
+    <div>
+        {{ user }}
+		<br>
+        {% if user.is_anonymous %}
+        <a href="{% url 'django.contrib.auth.views.login' %}">login</a>
+        {% else %}
+        <a href="{% url 'django.contrib.auth.views.logout' %}">logout</a>
+        {% endif %}
+    </div>
+    
+</body>
+
+</html>
+
