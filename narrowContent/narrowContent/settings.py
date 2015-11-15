@@ -39,6 +39,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+	'customauth',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -51,10 +52,10 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-#AUTH_USER_MODEL = 'auth.backends.EmailOrUsernameModelBackend'
+AUTH_USER_MODEL = 'customauth.MyUser'
 
 AUTHENTICATION_BACKENDS = (
-    'narrrowContent.auth.backends.EmailOrUsernameModelBackend',
+    #'narrrowContent.auth.backends.EmailOrUsernameModelBackend',
     'django.contrib.auth.backends.ModelBackend'
 )
 
