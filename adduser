@@ -67,12 +67,12 @@ sudo chown $user /Users/$user
 
 # Remove the "#" to disable automatic sub-directory creation
 #<<OptionalDirectories
-Directories[0]='Desktop'
+Directories[0]='Music'
 Directories[1]='Documents'
 Directories[2]='Downloads'
 Directories[3]='Pictures'
 Directories[4]='Videos'
-Directories[5]='Music'
+#Directories[5]='Desktop'
 
 for i in "${Directories[@]}"
 do

@@ -20,6 +20,6 @@ sudo dscl . -delete /Users/$user
 
 if [ -d /Users/$user ]
 then
-    sudo rm -r /Users/$user
+    sudo rm -rf /Users/$user
 fi
     printf "$user removed\n--------------\n"
