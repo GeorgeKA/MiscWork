@@ -3,6 +3,7 @@
 **Purpose**
 Perform backup tasks that you wish to occur daily and/or weekly. The idea is to create duplicates of important data in order to avoid accidentally deleting important local documents.
 You can also add your own custom tasks to be run cyclically. If an internet connection is required for your particular task, there is code to verify this below.
+You could of course accomplish much of this with crontab, but I wanted to try something new.
 
 **How to**
 1) Move this script to your $HOME directory, and add the following to your .bash_profile so that the script runs everytime you open the terminal.
@@ -50,6 +51,7 @@ NC='\033[0m' # No Color
 
 usage="\n${LIGHTPURPLE}Purpose:${NC} Perform backup tasks that you wish to occur daily and/or weekly. The idea is to create duplicates of important data in order to avoid accidentally deleting important local documents.
 You can also add your own custom tasks to be run cyclically. If an internet connection is required for your particular task, there is code to verify this below.
+You could of course accomplish much of this with crontab, but I wanted to try something new.
 ${LIGHTPURPLE}How to:${NC} 1) Move this script to your $HOME directory, and add the following to your .bash_profile so that the script runs everytime you open the terminal.
 	if [ -r automateTasks.sh ]
 	then
