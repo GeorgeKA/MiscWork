@@ -145,11 +145,11 @@ do
 			;;
 		\?)
 			echo "Invalid option: $OPTARG"
-			break
+			exit 1
 			;;
 		:)
 			echo "Missing an argument"
-			break
+			exit 1
 			;;
 	esac
 done
