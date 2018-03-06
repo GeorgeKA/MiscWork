@@ -1,43 +1,100 @@
 #!/bin/bash
-# Purpose: Create a new user on OSX. Unfortunately there is no builtin script to do so on OSX, like "adduser" for Linux/Unix
-# To delete the user: sudo dscl . -delete /Users/<user>
-# 	You'll also have to delete the user's home directory
+usage="Purpose: Create a new user on OSX. Unfortunately there is no builtin script to do so on OSX, like 'adduser' for Linux/Unix
+Usage: 
+		adduser <username>
+		adduser 
+				-u <optional_UserName>
+				-r <optional_RealName>
+				-i <optional_UserID>
+				-g <optional_GroupID>
 
-# Author: George Asante, https://github.com/GeorgeKA
+To delete the user: sudo dscl . -delete /Users/<user>
+	And: sudo dscl . -delete /Groups/admin GroupMembership <user>
+	You'll also have to delete the user's home directory
+
+Author: George Asante, https://github.com/GeorgeKA"
+
+user='null'
+realName='null'
+userID='null'
+groupID='null'
+
+while getopts ":u:r:i:g:h" opt
+do
+	case $opt in
+		u)
+			user="$OPTARG"
+			;;
+		r)
+			realName="$OPTARG"
+			;;
+		i)
+			userID="$OPTARG"
+			;;
+		g)
+			groupID="$OPTARG"
+			;;
+		h)
+			printf "$usage"
+			exit 1
+			;;
+		\?)
+			printf "Invalid argument $OPTARG"
+			exit 1
+			;;
+		:)
+			printf "Missing an argument"
+			exit 1
+			;;
+	esac
+done
 
 if [[ $UID -ne 0 ]]
 then 
-	printf "Please run $0 as root.\n--------------\n" 
+	printf "Please run $0 as root.\n" 
 	exit 1 
 fi
 
-if [ "$1" == "" ]
+if [ "$user" != 'null' ] # If the user argument was used
 then
-	printf "Try again\nUsage: adduser <userName>\n--------------\n"
+	: #Do nothing
+elif [ "$1" != '' ] # If an argument was parsed
+then
+	user=$1
+else
+	#printf "Try again\nUsage: adduser <userName>\n--------------\n"
+	printf "$usage"
 	exit 1
 fi
-user=$1
 
-echo "Welcome to adduser!!! A simple script to add new users on OSX systems"
-echo "--------------"
+printf "\nWelcome to adduser!!! A simple script to add new users on OSX systems\n--------------\n"
 
-echo "Enter the user's full name"
-read realName
-echo ""
+if [ "$realName" == 'null' ]
+then
+	echo "Enter the user's full name"
+	read realName
+	echo ""
+fi
 
-echo "Enter the user ID"
-echo "(To display all users and IDs: dscl . -list /users UniqueIDgroups)"
-read userID
-echo ""
+if [ "$userID" == 'null' ]
+then
+	echo "Enter the user ID"
+	echo "(To display all users and IDs try this in another terminal: dscl . -list /users UniqueID)"
+	read userID
+	echo ""
+fi
 
-echo "Enter the group ID"
-echo "(To display all groups and IDs: dscl . -list /groups PrimaryGroupID)"
-# group ID conventions: http://serverfault.com/questions/390640/how-are-group-ids-assigned
-# admin: 80
-# everyone: 12
-# staff: 20
-read groupID
-echo ""
+if [ "$groupID" == 'null' ]
+then
+	echo "Enter the group ID"
+	echo "(To display all groups and IDs try this in another terminal: dscl . -list /groups PrimaryGroupID)"
+	# group ID conventions: http://serverfault.com/questions/390640/how-are-group-ids-assigned
+	# admin: 80
+	# everyone: 12
+	# staff: 20
+	read groupID
+	echo ""
+fi
 
 echo "Enter the new password"
 read -s passwd
@@ -62,10 +119,16 @@ sudo dscl . -create /Users/$user NFSHomeDirectory /Users/$user
 sudo dscl . -passwd /Users/$user $passwd
 sudo dscl . -append /Groups/admin GroupMembership $user
 
+if [ "$?" != 0 ]
+then
+	echo "User creation error. See above"
+	exit 1
+fi
+
 sudo mkdir /Users/$user
 sudo chown $user /Users/$user
 
-# Remove the "#" to disable automatic sub-directory creation
+# Remove the "#" from the "OptionalDirectories" lines to disable automatic sub-directory creation
 #<<OptionalDirectories
 Directories[0]='Music'
 Directories[1]='Documents'
