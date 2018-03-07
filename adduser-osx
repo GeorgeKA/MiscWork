@@ -1,5 +1,4 @@
 #!/bin/bash
-#TODO: Add support for addition of all varieties of groups
 usage="Purpose: Create a new user on OSX. Unfortunately there is no builtin script to do so on OSX, like 'adduser' for Linux/Unix
 Usage: 
 	adduser <username>
@@ -7,7 +6,13 @@ Usage:
 		-u <optional_UserName>
 		-r <optional_RealName>
 		-i <optional_UserID>
+			To list existing users and IDs: dscl . -list /users UniqueID
 		-g <optional_GroupID>
+			To list existing groups: dscl . -list /groups PrimaryGroupID
+		-a 
+			Add your user to the admin group.
+		-e <optional_existingGroup>
+			Add your user to an existing group. To list existing groups: dscl . -list /groups PrimaryGroupID
 
 To delete the user: sudo dscl . -delete /Users/<user>
 	And: sudo dscl . -delete /Groups/admin GroupMembership <user>
@@ -19,8 +24,10 @@ user='null'
 realName='null'
 userID='null'
 groupID='null'
+existingGroup='null'
+isAdminUser='false'
 
-while getopts ":u:r:i:g:h" opt
+while getopts ":u:r:i:g:ae:h" opt
 do
 	case $opt in
 		u)
@@ -34,6 +41,12 @@ do
 			;;
 		g)
 			groupID="$OPTARG"
+			;;
+		a)
+			isAdminUser='true'
+			;;
+		e)
+			existingGroup="$OPTARG"
 			;;
 		h)
 			printf "$usage"
@@ -75,6 +88,11 @@ then
 	echo "Enter the user's full name"
 	read realName
 	echo ""
+	if [ "$realName" == "" ]
+	then
+		echo "Invalid input"
+		exit 1
+	fi
 fi
 
 if [ "$userID" == 'null' ]
@@ -83,6 +101,11 @@ then
 	echo "(To display all users and IDs try this in another terminal: dscl . -list /users UniqueID)"
 	read userID
 	echo ""
+	if [ "$userID" == "" ]
+	then
+		echo "Invalid input"
+		exit 1
+	fi
 fi
 
 if [ "$groupID" == 'null' ]
@@ -95,6 +118,11 @@ then
 	# staff: 20
 	read groupID
 	echo ""
+	if [ "$groupID" == "" ]
+	then
+		echo "Invalid input"
+		exit 1
+	fi
 fi
 
 echo "Enter the new password"
@@ -111,6 +139,7 @@ then
 	exit 1
 fi
 
+# Perform the actual user creation
 sudo dscl . -create /Users/$user
 sudo dscl . -create /Users/$user UserShell /bin/bash
 sudo dscl . -create /Users/$user RealName "$realName"
@@ -118,7 +147,20 @@ sudo dscl . -create /Users/$user UniqueID "$userID"
 sudo dscl . -create /Users/$user PrimaryGroupID $groupID
 sudo dscl . -create /Users/$user NFSHomeDirectory /Users/$user
 sudo dscl . -passwd /Users/$user $passwd
-sudo dscl . -append /Groups/admin GroupMembership $user
+if [ "$existingGroup" != 'null' ]
+then
+	dscl . -list /groups PrimaryGroupID | grep "$existingGroup"
+	if [  "$?" == 0 ]
+	then
+		sudo dscl . -append /Groups/"$existingGroup" GroupMembership $user
+	else
+		echo "Group $existingGroup does not exist"
+	fi
+fi
+if [ "$isAdminUser" == 'true' ]
+then
+	sudo dscl . -append /Groups/admin GroupMembership $user
+fi
 
 if [ "$?" != 0 ]
 then
