@@ -1,4 +1,5 @@
 #!/bin/bash
+#TODO: Add support for addition of all varieties of groups
 usage="Purpose: Create a new user on OSX. Unfortunately there is no builtin script to do so on OSX, like 'adduser' for Linux/Unix
 Usage: 
 	adduser <username>

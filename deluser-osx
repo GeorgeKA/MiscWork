@@ -1,7 +1,31 @@
 #!/bin/bash
-# Purpose: Delete a user on OSX. Unfortunately there is no builtin script to do so on OSX, like "deluser" for Linux/Unix
+#TODO: Add support for removal from all varieties of groups
+usage="\nPurpose: Delete a user on OSX. Unfortunately there is no builtin script to do so on OSX, like 'deluser' for Linux/Unix.
 
-# Author: George Asante, https://github.com/GeorgeKA
+Author: George Asante, https://github.com/GeorgeKA\n\n"
+
+user='null'
+
+while getopts ":u:h" opt
+do
+	case $opt in
+		u)
+			user="$OPTARG"
+			;;
+		h)
+			printf "$usage"
+			exit 1
+			;;
+		\?)
+			printf "Invalid argument: $OPTARG\n"
+			exit 1
+			;;
+		:)
+			printf "Missing an argument\n"
+			exit 1
+			;;
+	esac
+done
 
 if [[ $UID -ne 0 ]]
 then
@@ -9,17 +33,33 @@ then
     exit 1
 fi
 
-if [ "$1" == "" ]
+if [ "$user" != 'null' ] # Allow for a POSIX type argument...
 then
-    printf "Try again\nUsage: deluser <userName>\n--------------\n"
+	:
+elif [ "$1" != "" ] # ...and a normal command line argument
+then
+	user=$1
+else
+    printf "Try again\n-------Usage-------\n"
+	printf "$usage"
     exit 1
 fi
-user=$1
 
-sudo dscl . -delete /Users/$user
-
-if [ -d /Users/$user ]
+# Verify the existance of the given user
+dscl . -list /users UniqueID | grep "$user"
+if [ "$?" == "1" ]
 then
-    sudo rm -rf /Users/$user
+	echo "User $user does not exist."
+	exit 1
 fi
-    printf "$user removed\n--------------\n"
+
+# Perform the actual deletion
+sudo dscl . -delete /Users/"$user"
+sudo dscl . -delete /Groups/admin GroupMembership "$user"
+
+if [ -d /Users/"$user" ]
+then
+    sudo rm -rf /Users/"$user"
+fi
+
+printf "User $user removed\n"
