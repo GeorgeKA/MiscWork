@@ -1,12 +1,12 @@
 #!/bin/bash
 usage="Purpose: Create a new user on OSX. Unfortunately there is no builtin script to do so on OSX, like 'adduser' for Linux/Unix
 Usage: 
-		adduser <username>
-		adduser 
-				-u <optional_UserName>
-				-r <optional_RealName>
-				-i <optional_UserID>
-				-g <optional_GroupID>
+	adduser <username>
+	adduser 
+		-u <optional_UserName>
+		-r <optional_RealName>
+		-i <optional_UserID>
+		-g <optional_GroupID>
 
 To delete the user: sudo dscl . -delete /Users/<user>
 	And: sudo dscl . -delete /Groups/admin GroupMembership <user>
