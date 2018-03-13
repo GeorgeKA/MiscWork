@@ -2,6 +2,13 @@
 #TODO: Add support for removal from all varieties of groups
 usage="\nPurpose: Delete a user on OSX. Unfortunately there is no builtin script to do so on OSX, like 'deluser' for Linux/Unix.
 
+Usage: $0 [-u <userName>]
+		[<userName>]
+		[-h]
+
+-h: Display help text
+-u <userName>: Delete user <userName>
+
 Author: George Asante, https://github.com/GeorgeKA\n\n"
 
 user='null'
@@ -18,10 +25,12 @@ do
 			;;
 		\?)
 			printf "Invalid argument: $OPTARG\n"
+			printf "$usage"
 			exit 1
 			;;
 		:)
 			printf "Missing an argument\n"
+			printf "$usage"
 			exit 1
 			;;
 	esac

@@ -1,21 +1,24 @@
 #!/bin/bash
 usage="Purpose: Create a new user on OSX. Unfortunately there is no builtin script to do so on OSX, like 'adduser' for Linux/Unix
 Usage: 
-	adduser <username>
+	adduser [<username>]
 	adduser 
-		-u <optional_UserName>
-		-r <optional_RealName>
-		-i <optional_UserID>
-			To list existing users and IDs: dscl . -list /users UniqueID
-		-g <optional_GroupID>
-			To list existing groups: dscl . -list /groups PrimaryGroupID
-		-a 
-			Add your user to the admin group.
-		-e <optional_existingGroup>
-			Add your user to an existing group. To list existing groups: dscl . -list /groups PrimaryGroupID
+		[-u <userName>]
+		[-r <realName>]
+		[-i <userID>]
+		[-g <groupID>]
+		[-a]
+		[-e <existingGroup>]
+
+-u <userName>: Add user <userName>
+-r <realName>: Specify the user's real name
+-i <userID>: Provide a user ID. To list existing users and IDs: dscl . -list /users UniqueID
+-g <groupID>: Provide a group ID. To list existing groups: dscl . -list /groups PrimaryGroupID
+-a: Add your user to the admin group.
+-e <existingGroup>: Add your user to an existing group. To list existing groups: dscl . -list /groups PrimaryGroupID
 
 To delete the user: sudo dscl . -delete /Users/<user>
-	And: sudo dscl . -delete /Groups/admin GroupMembership <user>
+	And delete it from its groups. Ex: sudo dscl . -delete /Groups/admin GroupMembership <user>
 	You'll also have to delete the user's home directory
 
 Author: George Asante, https://github.com/GeorgeKA"
