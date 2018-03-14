@@ -1,5 +1,4 @@
 #!/bin/bash
-#TODO: Add support for removal from all varieties of groups
 usage="\nPurpose: Delete a user on OSX. Unfortunately there is no builtin script to do so on OSX, like 'deluser' for Linux/Unix.
 
 Usage: $0 [-u <userName>]
@@ -38,7 +37,7 @@ done
 
 if [[ $UID -ne 0 ]]
 then
-    printf "Please run $0 as root.\n--------------\n"
+    printf "\nPlease run $0 as root.\n\n"
     exit 1
 fi
 
@@ -63,8 +62,14 @@ then
 fi
 
 # Perform the actual deletion
+userGroups=$(groups "$user")
+for i in $userGroups
+do
+	printf "Remove $user from $i\n"
+	# The below sometimes returns messages about an invalid path, so I'll route the output to null. I figure dscl may do some auto group removal either when membership from certain groups is removed, or when the user is delted.
+	sudo dscl . -delete /Groups/"$i" GroupMembership "$user" > /dev/null 2>&1
+done
 sudo dscl . -delete /Users/"$user"
-sudo dscl . -delete /Groups/admin GroupMembership "$user"
 
 if [ -d /Users/"$user" ]
 then
