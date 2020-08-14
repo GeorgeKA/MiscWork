@@ -3,7 +3,6 @@
 **Purpose**
 Perform backup tasks that you wish to occur daily and/or weekly. The idea is to create duplicates of important data in order to avoid accidentally deleting important local documents.
 You can also add your own custom tasks to be run cyclically. If an internet connection is required for your particular task, there is code to verify this below.
-You could of course accomplish much of this with crontab, but the machine must be on for crontab jobs to run, and I wanted to try something new.
 
 **How to**
 1) Move this script to your $HOME directory, and add the following to your .bash_profile so that the script runs everytime you open the terminal.
@@ -51,7 +50,6 @@ NC='\033[0m' # No Color
 
 usage="\n${LIGHTPURPLE}Purpose:${NC} Perform backup tasks that you wish to occur daily and/or weekly. The idea is to create duplicates of important data in order to avoid accidentally deleting important local documents.
 You can also add your own custom tasks to be run cyclically. If an internet connection is required for your particular task, there is code to verify this below.
-You could of course accomplish much of this with crontab, but the machine must be on for crontab jobs to run, and I wanted to try something new.
 ${LIGHTPURPLE}How to:${NC} 1) Move this script to your $HOME directory, and add the following to your .bash_profile so that the script runs everytime you open the terminal.
 	if [ -r automateTasks.sh ]
 	then
@@ -145,11 +143,11 @@ do
 			;;
 		\?)
 			echo "Invalid option: $OPTARG"
-			exit 1
+			break
 			;;
 		:)
 			echo "Missing an argument"
-			exit 1
+			break
 			;;
 	esac
 done
@@ -189,6 +187,7 @@ HowTo
 <<FileBackup
 	BackupFile "<path_to_original_file>" "<path_to_backup_directory>"
 FileBackup
+	BackupFile "$HOME/todo.txt" "$HOME/.Backup"
 
 <<DirectoryBackup
 	BackupDir "<path_to_original_file>" "<path_to_backup_directory>"
@@ -217,7 +216,7 @@ CustomTask
 ########DO NOT EDIT THIS SECTION UNTIL...########
 
 	# Greeting
-	printf "${GREEN}Hey hey big fella!\n\n'Hate begets hate, but love is infectious.${NC}'\n\n"
+	printf "${GREEN}Hey hey big fella!\n\n'I EAT right.\nI SLEEP right.\nI TRAIN right.\nI SWIM right.\nEVERYDAY!\nI'm CONSISTENT.\nI DON'T STOP.\nLET'S GO CHAMP!- Shannon 'The Cannon' Briggs${NC}'\n\n"
 
 	UpdateDateTracker
 fi
@@ -228,6 +227,12 @@ then
 	printf "Performing the WEEKLY TASKS:\n\n"
 
 ########...HERE.########
+
+	#1)
+	BackupFile "$HOME/.automateTasks.sh" "$HOME/.Backup"
+
+	#2)
+	BackupFile "$HOME/.bash_profile" "$HOME/.Backup"
 
 # Follow the same format used in the DAILY TASKS section
 
