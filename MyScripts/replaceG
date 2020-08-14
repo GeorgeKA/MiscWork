@@ -1,0 +1,48 @@
+#!/bin/bash
+usage="Description: Replace all occurrences of string #1 with string #2
+Usage: ./replaceG <fileName> <originalString> <replacementString>\n\n"
+infile=$1
+pattern1=$2
+pattern2=$3
+
+while getopts ":h" opt
+do
+	case $opt in
+		h)
+			printf "$usage"
+			exit 1
+			;;
+		\?)
+			printf "Invalid option $OPTARG\n" 
+			exit 1
+			;;
+		:)
+			printf "Option $OPTARG expects an argument\n"
+			exit 1
+			;;
+	esac
+done
+
+printf "\n"
+echo "---> Replace all occurrences of string #1 with string #2"
+
+if [[ "$infile" == "" || "$pattern1" == "" || "$pattern2" == "" ]]
+then
+	printf "\n"
+	echo "Enter file name:"
+	read infile
+
+	printf "\n"
+	echo "Enter pattern to replace:"
+	read pattern1
+
+	printf "\n"
+	echo "Enter new pattern:"
+	read pattern2
+fi
+
+sed -i.bak "s/$pattern1/$pattern2/g" $infile
+printf "\n"
+echo "Replaced "$pattern1" with "$pattern2" in "$infile""
+
+rm $infile'.bak'

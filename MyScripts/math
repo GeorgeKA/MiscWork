@@ -1,0 +1,41 @@
+#!/bin/bash
+#Author: George Asante
+
+usage="Purpose:
+This basic script is intended to take a math statement as an argument, pipe it to the arbitrary precision calculator bc, and shoot out the answer.
+
+Usage:
+	math [math statement]
+	math -h
+	
+-h: Print usage"
+
+while getopts "h" opt
+do
+	case $opt in
+		h) 
+			printf "$usage\n"
+			exit 1
+			;;
+		\?)
+			echo "Invalid option: $opt"
+			exit 1
+			;;
+	esac
+done
+
+if [ $2 ]
+then
+	printf "\nToo many arguments. Exiting\n\n"
+	exit 1
+elif [ $1 ]
+then
+	statement=$1
+else
+	printf "Enter math statement:"
+	read statement
+fi
+
+result=$(echo $statement| bc)
+
+printf "\n$statement = $result\n"

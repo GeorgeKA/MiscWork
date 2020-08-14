@@ -1,0 +1,34 @@
+#!/bin/bash
+<<Purpose
+	Unzip the db2support.zip, and create a symbolic link to the all important db2diag.log if it exists.
+Purpose
+
+unzipName='DB2Support'
+db2diag="$unzipName/DB2DUMP/db2diag.log"
+
+function ScriptUsageMsg {
+	printf "Usage: unzipdb2 <db2support.zip>"
+	exit
+}
+
+if [ ! "$#" -eq '1' ] || [ "$1" == '' ] 
+then
+	ScriptUsageMsg
+fi
+
+echo "$1" | grep --silent ".zip"
+if [ "$?" -eq '1' ]
+then
+	ScriptUsageMsg
+fi
+
+unzip -d $unzipName $1
+
+if [ -r "$db2diag" ]
+then
+	ln -s $db2diag
+	grep -A 15 'LEVEL: Error' $db2diag > grep-error-db2diag.out
+else
+	printf "db2diag.log not in default path. Searching...\n"
+	find $unzipName -name "*db2diag*"
+fi

@@ -1,0 +1,8 @@
+#!/bin/bash
+#TODO: Add options to this so the user can use -h for help
+
+for i in $@
+do
+	printf "\n\n###### Search string: $i ######\n\n\n"
+	find . -iname "*$i*"
+done

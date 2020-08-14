@@ -1,0 +1,6 @@
+#!/bin/bash
+
+for i in $@
+do
+	sudo diskutil unmount $i && say "Ejected $i"
+done
