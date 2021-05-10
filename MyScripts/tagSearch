@@ -1,0 +1,9 @@
+#!/bin/bash
+# This tool is used to search for tags that I've written that correspond to notable issues that I've dealt with.
+# The tags are written in files called "tags.txt". The search will be done under the current directory.
+# Usage: ./tagSearch <tag>
+
+for i in $(find . -name "tags.txt")
+do
+	grep -iH $1 $i
+done
