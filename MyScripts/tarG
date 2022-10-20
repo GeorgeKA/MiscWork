@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# This script unpacks tar files to a directory that is equivalent to the original file name with _unpack appended, and white space converted to underscores.
+
+inputFile=$1;
+inputFile_noWhiteSpace=${inputFile// /_}
+outputDir="$inputFile_noWhiteSpace"_unpack;
+
+mkdir $outputDir;
+tar -xvf "$inputFile" -C "$outputDir";
