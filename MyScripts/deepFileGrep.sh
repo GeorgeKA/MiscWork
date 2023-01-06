@@ -15,10 +15,10 @@ fi
 
 for i in $(find . -name "$filename")
 do
-	grep -q "$searchStr" $i
+	grep -qi "$searchStr" $i
 	if [ $? -eq 0 ]
 	then
 		printf "\nFILE: $i\n";
 	fi
-	grep "$searchStr" $i;
+	grep -i "$searchStr" $i;
 done
